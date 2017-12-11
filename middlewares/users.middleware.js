@@ -4,15 +4,12 @@ const {
     permissionCounts,
     listUser,
     listRoles,
-    listPermission
+    listPermission,
+    addUser
 } = require('../db/users.dao');
 const logger = require('../utils/logsTools').getLogger('users.middlewares.js');
-
 const {converseToModel} = require('../utils/columeToModel');
-
-const {checkParamsIsEmpty} = require('../utils/check.params');
-
-const {usersParams} = require('../models/validate.params.model');
+const {USER_ADD_SUCCESS, USER_ADD_FAIL} = require('../models/retCode.model');
 
 /**
  *用户的服务层
@@ -89,12 +86,15 @@ module.exports = {
      * @returns {Promise.<void>}
      */
     async addUsersService(ctx, next) {
-        let usersModel = ctx.request.body;
-        logger.info('userParams', usersModel);
-        let paramsEmptyStr = checkParamsIsEmpty(usersModel, usersParams());
-        if (paramsEmptyStr) {
-            ctx.throw(400, `${paramsEmptyStr} require`)
-        }
+        logger.debug('addUsersService');
+        let userInfo = ctx.request.body;
+        let addStatus = await addUser([userInfo.userLoginName, userInfo.userPassword, userInfo.userName]);
+        let isAddStatus = (addStatus && addStatus.affectedRows >= 1);
+        ctx.dataServices = isAddStatus;
+        ctx.retCode = isAddStatus ? USER_ADD_SUCCESS : USER_ADD_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'addUsers';
+        logger.debug('addUsersService:', addStatus);
         await next();
     }
 };

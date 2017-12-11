@@ -1,6 +1,12 @@
-const router = require('koa-router')();
-const {userCountsService, listUsersService, addUsersService} = require('../middlewares/users.middleware');
-const respMiddleware = require('../middlewares/res.middleware');
+const router = require('koa-router')(),
+    {
+        userCountsService,
+        listUsersService,
+        addUsersService
+    } = require('../middlewares/users.middleware'),
+    respMiddleware = require('../middlewares/res.middleware'),
+
+    {checkParams4Users} = require('../middlewares/checkParam.middleware');
 
 router.prefix('/users');
 
@@ -11,6 +17,6 @@ router.get('/', userCountsService, function (ctx, next) {
 
 router.get('/bar', listUsersService, respMiddleware);
 
-router.put('/info', addUsersService, respMiddleware);
+router.put('/info', checkParams4Users, addUsersService, respMiddleware);
 
 module.exports = router;
