@@ -1,0 +1,7 @@
+class LinkModel {
+    constructor() {
+    }
+
+    getLinkMenus() {
+    }
+}
