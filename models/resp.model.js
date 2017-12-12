@@ -1,5 +1,5 @@
 class RespModel {
-    constructor(title, datas, retCode = 0) {
+    constructor(title, datas = [], retCode = 0) {
         this.title = title;
         this.datas = datas;
         this.retCode = retCode;

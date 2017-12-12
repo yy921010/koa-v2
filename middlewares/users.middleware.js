@@ -4,15 +4,20 @@ const {
     permissionCounts,
     listUser,
     listRoles,
-    listPermission
+    listPermission,
+    addUser,
+    addRole,
+    addPermission,
+    updateUser,
+    updateRoles,
+    updatePermission,
+    delUser,
+    delRoles,
+    delPermission
 } = require('../db/users.dao');
 const logger = require('../utils/logsTools').getLogger('users.middlewares.js');
-
 const {converseToModel} = require('../utils/columeToModel');
-
-const {checkParamsIsEmpty} = require('../utils/check.params');
-
-const {usersParams} = require('../models/validate.params.model');
+const retCodeEnum = require('../models/retCode.model');
 
 /**
  *用户的服务层
@@ -89,12 +94,157 @@ module.exports = {
      * @returns {Promise.<void>}
      */
     async addUsersService(ctx, next) {
-        let usersModel = ctx.request.body;
-        logger.info('userParams', usersModel);
-        let paramsEmptyStr = checkParamsIsEmpty(usersModel, usersParams());
-        if (paramsEmptyStr) {
-            ctx.throw(400, `${paramsEmptyStr} require`)
-        }
+        logger.debug('添加单个用户');
+        let userInfo = ctx.request.body;
+        let addStatus = await addUser([userInfo.userLoginName, userInfo.userPassword, userInfo.userName]);
+        let isAddStatus = (addStatus && addStatus.affectedRows >= 1);
+        ctx.dataServices = isAddStatus;
+        ctx.retCode = isAddStatus ? retCodeEnum.ADD_USER_SUCCESS : retCodeEnum.ADD_USER_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'addUsers';
+        logger.debug('addUsersService:', addStatus);
+        await next();
+    },
+    /**
+     * 添加用户的角色
+     * @param ctx
+     * @param next
+     * @returns {Promise.<void>}
+     */
+    async addRolesService(ctx, next) {
+        logger.debug('添加用户的角色');
+        let userRole = ctx.request.body;
+        let addStatus = await addRole([userRole.rolesName]);
+        let isAddStatus = (addStatus && addStatus.affectedRows >= 1);
+        ctx.dataServices = isAddStatus;
+        ctx.retCode = isAddStatus ? retCodeEnum.ADD_ROLE_SUCCESS : retCodeEnum.ADD_ROLE_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'addRoles';
+        logger.debug('addRolesService:', addStatus);
+        await next();
+    },
+    /**
+     * 添加角色对应的权限
+     * @param ctx
+     * @param next
+     * @returns {Promise.<void>}
+     */
+    async addPermissionService(ctx, next) {
+        logger.debug('添加角色对应的权限');
+        let permiss = ctx.request.body;
+        let addStatus = await addPermission([permiss.permissionName]);
+        let isAddStatus = (addStatus && addStatus.affectedRows >= 1);
+        ctx.dataServices = isAddStatus;
+        ctx.retCode = isAddStatus ? retCodeEnum.ADD_PERMISSION_SUCCESS : retCodeEnum.ADD_PERMISSION_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'addPermission';
+        logger.debug('addPermissionService:', addStatus);
+        await next();
+    },
+    /**
+     * 更新用户
+     * @param ctx
+     * @param next
+     * @returns {Promise.<void>}
+     */
+    async updateUsersService(ctx, next) {
+        logger.debug('更新用户');
+        let userInfo = ctx.request.body;
+        let userId = ctx.params.userId;
+        let addStatus = await updateUser([userInfo.userLoginName, userInfo.userPassword, userInfo.userName, userId]);
+        let isAddStatus = (addStatus && addStatus.affectedRows >= 1);
+        ctx.dataServices = isAddStatus;
+        ctx.retCode = isAddStatus ? retCodeEnum.UPDATE_USER_SUCCESS : retCodeEnum.UPDATE_USER_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'updateUsers';
+        logger.debug('updateUsersService:', addStatus);
+        await next();
+    },
+    /**
+     * 更新角色
+     * @param ctx
+     * @param next
+     * @returns {Promise.<void>}
+     */
+    async updateRolesService(ctx, next) {
+        logger.debug('更新角色');
+        let userRoles = ctx.request.body;
+        let roleId = ctx.params.roleId;
+        let addStatus = await updateRoles([userRoles.rolesName, roleId]);
+        let isAddStatus = (addStatus && addStatus.affectedRows >= 1);
+        ctx.dataServices = isAddStatus;
+        ctx.retCode = isAddStatus ? retCodeEnum.UPDATE_ROLE_SUCCESS : retCodeEnum.UPDATE_ROLE_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'updateRoles';
+        logger.debug('updateRolesService:', addStatus);
+        await next();
+    },
+    /**
+     * 更新权限
+     * @param ctx
+     * @param next
+     * @returns {Promise.<void>}
+     */
+    async updatePermissionService(ctx, next) {
+        logger.debug('更新权限');
+        let permission = ctx.request.body;
+        let perId = ctx.params.perId;
+        let addStatus = await updatePermission([permission.permissionName, perId]);
+        let isAddStatus = (addStatus && addStatus.affectedRows >= 1);
+        ctx.dataServices = isAddStatus;
+        ctx.retCode = isAddStatus ? retCodeEnum.UPDATE_PERMISSION_SUCCESS : retCodeEnum.UPDATE_PERMISSION_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'updatePermission';
+        logger.debug('updatePermissionService:', addStatus);
+        await next();
+    },
+    /**
+     * 根据用户id删除用户
+     * @param ctx
+     * @param next
+     * @returns {Promise.<void>}
+     */
+    async delUserByUserId(ctx, next) {
+        logger.debug('删除用户');
+        let userId = ctx.params.userId;
+        let addStatus = await delUser([userId]);
+        let isAddStatus = (addStatus && addStatus.affectedRows >= 1);
+        ctx.dataServices = isAddStatus;
+        ctx.retCode = isAddStatus ? retCodeEnum.DEL_USER_SUCCESS : retCodeEnum.DEL_USER_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'delUser';
+        logger.debug('delUserByUserId:', addStatus);
+        await next();
+    },
+    /**
+     * 根据id删除角色
+     * @param ctx
+     * @param next
+     * @returns {Promise.<void>}
+     */
+    async delRoleByRoleId(ctx, next) {
+        logger.debug('删除角色');
+        let roleId = ctx.params.roleId;
+        let addStatus = await delRoles([roleId]);
+        let isAddStatus = (addStatus && addStatus.affectedRows >= 1);
+        ctx.dataServices = isAddStatus;
+        ctx.retCode = isAddStatus ? retCodeEnum.DEL_ROLE_SUCCESS : retCodeEnum.DEL_ROLE_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'delRole';
+        logger.debug('delRoleByRoleId:', addStatus);
+        await next();
+    },
+
+    async delPermissionByPerId(ctx, next) {
+        logger.debug('删除角色');
+        let perId = ctx.params.perId;
+        let addStatus = await delPermission([perId]);
+        let isAddStatus = (addStatus && addStatus.affectedRows >= 1);
+        ctx.dataServices = isAddStatus;
+        ctx.retCode = isAddStatus ? retCodeEnum.DEL_PERMISSION_SUCCESS : retCodeEnum.DEL_PERMISSION_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'delPermission';
+        logger.debug('delPermissionByPerId:', addStatus);
         await next();
     }
 };
