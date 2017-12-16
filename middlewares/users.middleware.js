@@ -33,6 +33,9 @@ module.exports = {
     async userCountsService(ctx, next) {
         let userCountDAO = await userCounts();
         logger.debug('[userCountsService]', userCountDAO);
+        ctx.dataServices = converseToModel(userCountDAO);
+        ctx.dataType = 'COMBINATION';
+        ctx.dataMethod = 'countUsers';
         await next();
     },
     /**
@@ -44,6 +47,9 @@ module.exports = {
     async roleCountsService(ctx, next) {
         let roleCountDAO = await roleCounts();
         logger.debug('roleCountsService:', roleCountDAO);
+        ctx.dataServices = converseToModel(roleCountDAO);
+        ctx.dataType = 'COMBINATION';
+        ctx.dataMethod = 'countUsers';
         await next();
     },
     /**
@@ -55,6 +61,9 @@ module.exports = {
     async permissionCountsService(ctx, next) {
         let permissionCountsDAO = await permissionCounts();
         logger.debug('permissionCountsService:', permissionCountsDAO);
+        ctx.dataServices = converseToModel(permissionCountsDAO);
+        ctx.dataType = 'COMBINATION';
+        ctx.dataMethod = 'countUsers';
         await next();
     },
     /**

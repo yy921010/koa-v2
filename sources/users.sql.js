@@ -9,11 +9,11 @@ const listRolesSQL = `SELECT * FROM users_roles`;
 
 const listPermissionSQL = `SELECT * FROM users_permission`;
 
-const countsUserSQL = `SELECT COUNT(id) FROM users_list`;
+const countsUserSQL = `SELECT COUNT(id) as countId FROM users_list`;
 
-const countsRolesSQL = `SELECT COUNT(id) FROM users_roles`;
+const countsRolesSQL = `SELECT COUNT(id) as countId FROM users_roles`;
 
-const countsPermissionSQL = `SELECT COUNT(id) FROM users_roles`;
+const countsPermissionSQL = `SELECT COUNT(id) as countId FROM users_roles`;
 
 const getUserByUserNameSQL = `SELECT * FROM users_list u WHERE u.user_login_name = ?`;
 

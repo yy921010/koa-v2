@@ -22,7 +22,7 @@ router.get(
 );
 
 router.get(
-    '/users/:userLoginName',
+    '/users/user/:userLoginName',
     getUserByLoginName,
     respMiddleware
 );
