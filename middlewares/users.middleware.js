@@ -13,7 +13,8 @@ const {
     updatePermission,
     delUser,
     delRoles,
-    delPermission
+    delPermission,
+    getUserByLoginName
 } = require('../db/users.dao');
 const logger = require('../utils/logsTools').getLogger('users.middlewares.js');
 const {converseToModel} = require('../utils/columeToModel');
@@ -23,19 +24,34 @@ const retCodeEnum = require('../models/retCode.model');
  *用户的服务层
  */
 module.exports = {
-
+    /**
+     * 所有用户的个数
+     * @param ctx
+     * @param next
+     * @returns {Promise.<void>}
+     */
     async userCountsService(ctx, next) {
         let userCountDAO = await userCounts();
-        logger.debug('userCountsService:', userCountDAO);
+        logger.debug('[userCountsService]', userCountDAO);
         await next();
     },
-
+    /**
+     * 所有角色的个数
+     * @param ctx
+     * @param next
+     * @returns {Promise.<void>}
+     */
     async roleCountsService(ctx, next) {
         let roleCountDAO = await roleCounts();
         logger.debug('roleCountsService:', roleCountDAO);
         await next();
     },
-
+    /**
+     * 所有权限的个数
+     * @param ctx
+     * @param next
+     * @returns {Promise.<void>}
+     */
     async permissionCountsService(ctx, next) {
         let permissionCountsDAO = await permissionCounts();
         logger.debug('permissionCountsService:', permissionCountsDAO);
@@ -245,6 +261,21 @@ module.exports = {
         ctx.dataType = 'COMMIT_STATUS';
         ctx.dataMethod = 'delPermission';
         logger.debug('delPermissionByPerId:', addStatus);
+        await next();
+    },
+    /**
+     * 根据用户的登录名查询用户
+     * @param {*} ctx
+     * @param {*} next
+     */
+    async getUserByLoginName(ctx, next) {
+        logger.debug('根据用户的登录名');
+        let userLoginName = ctx.params.userLoginName;
+        let userDAO = await getUserByLoginName([userLoginName]);
+        ctx.dataServices = converseToModel(userDAO);
+        logger.debug('converseToModel:', ctx.dataServices);
+        ctx.dataType = 'COMBINATION';
+        ctx.dataMethod = 'usersByLoginName';
         await next();
     }
 };
