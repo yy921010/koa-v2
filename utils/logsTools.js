@@ -15,7 +15,7 @@ log4js.configure({
         everything: {
             type: 'dateFile',
             filename: 'logs/app-access.log',
-            pattern: '.yyyy-MM-dd-hh',
+            pattern: '.yyyy-MM-dd_hh',
             compress: true,
             layout: {
                 type: 'pattern',

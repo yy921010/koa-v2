@@ -13,7 +13,7 @@ const countsUserSQL = `SELECT COUNT(id) as countId FROM users_list`;
 
 const countsRolesSQL = `SELECT COUNT(id) as countId FROM users_roles`;
 
-const countsPermissionSQL = `SELECT COUNT(id) as countId FROM users_roles`;
+const countsPermissionSQL = `SELECT COUNT(id) as countId FROM users_permission`;
 
 const getUserByUserNameSQL = `SELECT * FROM users_list u WHERE u.user_login_name = ?`;
 

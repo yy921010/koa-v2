@@ -32,9 +32,9 @@ module.exports = {
      */
     async userCountsService(ctx, next) {
         let userCountDAO = await userCounts();
-        logger.debug('[userCountsService]', userCountDAO);
         ctx.dataServices = converseToModel(userCountDAO);
-        ctx.dataType = 'COMBINATION';
+        logger.debug('[countUsers]', ctx.dataServices);
+        ctx.dataType = 'COUNTS';
         ctx.dataMethod = 'countUsers';
         await next();
     },
@@ -46,10 +46,10 @@ module.exports = {
      */
     async roleCountsService(ctx, next) {
         let roleCountDAO = await roleCounts();
-        logger.debug('roleCountsService:', roleCountDAO);
         ctx.dataServices = converseToModel(roleCountDAO);
-        ctx.dataType = 'COMBINATION';
-        ctx.dataMethod = 'countUsers';
+        logger.debug('[countRoles]', ctx.dataServices);
+        ctx.dataType = 'COUNTS';
+        ctx.dataMethod = 'countRoles';
         await next();
     },
     /**
@@ -60,10 +60,10 @@ module.exports = {
      */
     async permissionCountsService(ctx, next) {
         let permissionCountsDAO = await permissionCounts();
-        logger.debug('permissionCountsService:', permissionCountsDAO);
         ctx.dataServices = converseToModel(permissionCountsDAO);
-        ctx.dataType = 'COMBINATION';
-        ctx.dataMethod = 'countUsers';
+        logger.debug('[countPermission]', ctx.dataServices);
+        ctx.dataType = 'COUNTS';
+        ctx.dataMethod = 'countPermission';
         await next();
     },
     /**
@@ -74,9 +74,8 @@ module.exports = {
      */
     async listUsersService(ctx, next) {
         let listUserDAO = await listUser();
-        logger.debug('listUsers:', listUserDAO);
         ctx.dataServices = converseToModel(listUserDAO);
-        logger.debug('converseToModel:', ctx.dataServices);
+        logger.debug('[listUsers]', ctx.dataServices);
         ctx.dataType = 'COMBINATION';
         ctx.dataMethod = 'listUsers';
         await next();
@@ -89,9 +88,8 @@ module.exports = {
      */
     async listRolesService(ctx, next) {
         let listRolesDAO = await listRoles();
-        logger.debug('listUsers:', listRolesDAO);
         ctx.dataServices = converseToModel(listRolesDAO);
-        logger.debug('converseToModel:', ctx.dataServices);
+        logger.debug('[listRoles]', ctx.dataServices);
         ctx.dataType = 'COMBINATION';
         ctx.dataMethod = 'listRoles';
         await next();
@@ -105,9 +103,8 @@ module.exports = {
      */
     async listPermissionsService(ctx, next) {
         let listPermissionDAO = await listPermission();
-        logger.debug('listUsers:', listPermissionDAO);
         ctx.dataServices = converseToModel(listPermissionDAO);
-        logger.debug('converseToModel:', ctx.dataServices);
+        logger.debug('[listPermissions]', ctx.dataServices);
         ctx.dataType = 'COMBINATION';
         ctx.dataMethod = 'listPermissions';
         await next();
@@ -127,7 +124,7 @@ module.exports = {
         ctx.retCode = isAddStatus ? retCodeEnum.ADD_USER_SUCCESS : retCodeEnum.ADD_USER_FAIL;
         ctx.dataType = 'COMMIT_STATUS';
         ctx.dataMethod = 'addUsers';
-        logger.debug('addUsersService:', addStatus);
+        logger.debug('[addUsersService]', addStatus);
         await next();
     },
     /**
@@ -145,7 +142,7 @@ module.exports = {
         ctx.retCode = isAddStatus ? retCodeEnum.ADD_ROLE_SUCCESS : retCodeEnum.ADD_ROLE_FAIL;
         ctx.dataType = 'COMMIT_STATUS';
         ctx.dataMethod = 'addRoles';
-        logger.debug('addRolesService:', addStatus);
+        logger.debug('[addRolesService]', addStatus);
         await next();
     },
     /**
@@ -163,7 +160,7 @@ module.exports = {
         ctx.retCode = isAddStatus ? retCodeEnum.ADD_PERMISSION_SUCCESS : retCodeEnum.ADD_PERMISSION_FAIL;
         ctx.dataType = 'COMMIT_STATUS';
         ctx.dataMethod = 'addPermission';
-        logger.debug('addPermissionService:', addStatus);
+        logger.debug('[addPermissionService]', addStatus);
         await next();
     },
     /**
@@ -182,7 +179,7 @@ module.exports = {
         ctx.retCode = isAddStatus ? retCodeEnum.UPDATE_USER_SUCCESS : retCodeEnum.UPDATE_USER_FAIL;
         ctx.dataType = 'COMMIT_STATUS';
         ctx.dataMethod = 'updateUsers';
-        logger.debug('updateUsersService:', addStatus);
+        logger.debug('[updateUsersService]', addStatus);
         await next();
     },
     /**
@@ -201,7 +198,7 @@ module.exports = {
         ctx.retCode = isAddStatus ? retCodeEnum.UPDATE_ROLE_SUCCESS : retCodeEnum.UPDATE_ROLE_FAIL;
         ctx.dataType = 'COMMIT_STATUS';
         ctx.dataMethod = 'updateRoles';
-        logger.debug('updateRolesService:', addStatus);
+        logger.debug('[updateRolesService]', addStatus);
         await next();
     },
     /**
@@ -220,7 +217,7 @@ module.exports = {
         ctx.retCode = isAddStatus ? retCodeEnum.UPDATE_PERMISSION_SUCCESS : retCodeEnum.UPDATE_PERMISSION_FAIL;
         ctx.dataType = 'COMMIT_STATUS';
         ctx.dataMethod = 'updatePermission';
-        logger.debug('updatePermissionService:', addStatus);
+        logger.debug('[updatePermissionService]', addStatus);
         await next();
     },
     /**
@@ -238,7 +235,7 @@ module.exports = {
         ctx.retCode = isAddStatus ? retCodeEnum.DEL_USER_SUCCESS : retCodeEnum.DEL_USER_FAIL;
         ctx.dataType = 'COMMIT_STATUS';
         ctx.dataMethod = 'delUser';
-        logger.debug('delUserByUserId:', addStatus);
+        logger.debug('[delUserByUserId]', addStatus);
         await next();
     },
     /**
@@ -256,7 +253,7 @@ module.exports = {
         ctx.retCode = isAddStatus ? retCodeEnum.DEL_ROLE_SUCCESS : retCodeEnum.DEL_ROLE_FAIL;
         ctx.dataType = 'COMMIT_STATUS';
         ctx.dataMethod = 'delRole';
-        logger.debug('delRoleByRoleId:', addStatus);
+        logger.debug('[delRoleByRoleId]', addStatus);
         await next();
     },
 
@@ -269,7 +266,7 @@ module.exports = {
         ctx.retCode = isAddStatus ? retCodeEnum.DEL_PERMISSION_SUCCESS : retCodeEnum.DEL_PERMISSION_FAIL;
         ctx.dataType = 'COMMIT_STATUS';
         ctx.dataMethod = 'delPermission';
-        logger.debug('delPermissionByPerId:', addStatus);
+        logger.debug('[delPermissionByPerId]', addStatus);
         await next();
     },
     /**
@@ -282,7 +279,7 @@ module.exports = {
         let userLoginName = ctx.params.userLoginName;
         let userDAO = await getUserByLoginName([userLoginName]);
         ctx.dataServices = converseToModel(userDAO);
-        logger.debug('converseToModel:', ctx.dataServices);
+        logger.debug('[usersByLoginName]', ctx.dataServices);
         ctx.dataType = 'COMBINATION';
         ctx.dataMethod = 'usersByLoginName';
         await next();

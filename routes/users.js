@@ -4,7 +4,7 @@ const router = require('koa-router')(),
         addUsersService, addRolesService, addPermissionService,
         updateUsersService, updateRolesService, updatePermissionService,
         delUserByUserId, delRoleByRoleId, delPermissionByPerId, getUserByLoginName,
-        userCountsService
+        userCountsService,roleCountsService,permissionCountsService
     } = require('../middlewares/users.middleware'),
     {
         checkParams4Users, checkParams4Roles, checkParam4Permission,
@@ -22,14 +22,14 @@ router.get(
 );
 
 router.get(
-    '/users/user/:userLoginName',
-    getUserByLoginName,
+    '/users/counts',
+    userCountsService,
     respMiddleware
 );
 
 router.get(
-    '/users/counts',
-    userCountsService,
+    '/users/:userLoginName/user-login-name',
+    getUserByLoginName,
     respMiddleware
 );
 
@@ -38,9 +38,22 @@ router.get(
     listRolesService,
     respMiddleware
 );
+
+router.get(
+    '/roles/counts',
+    roleCountsService,
+    respMiddleware
+);
+
 router.get(
     '/permissions',
     listPermissionsService,
+    respMiddleware
+);
+
+router.get(
+    '/permissions/counts',
+    permissionCountsService,
     respMiddleware
 );
 
