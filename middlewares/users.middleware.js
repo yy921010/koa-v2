@@ -14,7 +14,9 @@ const {
     delUser,
     delRoles,
     delPermission,
-    getUserByLoginName
+    getUserByLoginName,
+    getUserRole,
+    getRolesByUsersId
 } = require('../db/users.dao');
 const logger = require('../utils/logsTools').getLogger('users.middlewares.js');
 const {converseToModel} = require('../utils/columeToModel');
@@ -282,6 +284,26 @@ module.exports = {
         logger.debug('[usersByLoginName]', ctx.dataServices);
         ctx.dataType = 'COMBINATION';
         ctx.dataMethod = 'usersByLoginName';
+        await next();
+    },
+
+    async getUserRolesService(ctx, next) {
+        logger.debug('当前的用户的角色');
+        let userRoleDAO = await getUserRole();
+        ctx.dataServices = converseToModel(userRoleDAO);
+        logger.debug('[getUserRolesService]', ctx.dataServices);
+        ctx.dataType = 'COMBINATION';
+        ctx.dataMethod = 'getUserRoles';
+        await next();
+    },
+    async getRolesByUsersIdServices(ctx, next) {
+        logger.debug('通过用户ID当前的用户的角色');
+        let userId = ctx.params.userId;
+        let userRoleDAO = await getRolesByUsersId([userId]);
+        ctx.dataServices = converseToModel(userRoleDAO);
+        logger.debug('[getRolesByUsersIdServices]', ctx.dataServices);
+        ctx.dataType = 'COMBINATION';
+        ctx.dataMethod = 'getUserRolesByUserId';
         await next();
     }
 };
