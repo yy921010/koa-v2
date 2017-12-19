@@ -28,7 +28,6 @@ module.exports = {
         if (_.isArray(mysqlValues)) {
             _.each(mysqlValues, (mysqlItems) => {
                 _.each(mysqlItems, (item, key) => {
-                    logger.debug('[mysqlItems]', key);
                     if (key === 'gmt_create' || key === 'gmt_modified') {
                         item = moment(item).format('YYYY-MM-DD | hh:mm:ss')
                     }

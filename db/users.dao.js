@@ -17,7 +17,9 @@ const {
     getUserRoleSQL,
     getRolePermissionSQL,
     getUserByUserNameSQL,
-    getRolesByUsersIdSQL
+    getRolesByUsersIdSQL,
+    addUsersRolesSQL,
+    delUserRoleLinkSQL
 } = require('../sources/users.sql');
 const {baseDAO} = require('./base.dao');
 
@@ -100,6 +102,14 @@ let getRolesByUsersId = async (userId) => {
     return await baseDAO(getRolesByUsersIdSQL, userId);
 };
 
+let addUsersRoles = async (userAndRoleId) => {
+    return await baseDAO(addUsersRolesSQL, userAndRoleId)
+};
+
+let delUsersRole = async (userId) => {
+    return await baseDAO(delUserRoleLinkSQL, userId)
+};
+
 module.exports = {
     userCounts,
     roleCounts,
@@ -119,5 +129,7 @@ module.exports = {
     getUserRole,
     getRolePermission,
     getUserByLoginName,
-    getRolesByUsersId
+    getRolesByUsersId,
+    addUsersRoles,
+    delUsersRole
 };

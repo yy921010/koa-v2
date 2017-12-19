@@ -16,7 +16,9 @@ const {
     delPermission,
     getUserByLoginName,
     getUserRole,
-    getRolesByUsersId
+    getRolesByUsersId,
+    addUsersRoles,
+    delUsersRole
 } = require('../db/users.dao');
 const logger = require('../utils/logsTools').getLogger('users.middlewares.js');
 const {converseToModel} = require('../utils/columeToModel');
@@ -296,6 +298,7 @@ module.exports = {
         ctx.dataMethod = 'getUserRoles';
         await next();
     },
+
     async getRolesByUsersIdServices(ctx, next) {
         logger.debug('通过用户ID当前的用户的角色');
         let userId = ctx.params.userId;
@@ -304,6 +307,30 @@ module.exports = {
         logger.debug('[getRolesByUsersIdServices]', ctx.dataServices);
         ctx.dataType = 'COMBINATION';
         ctx.dataMethod = 'getUserRolesByUserId';
+        await next();
+    },
+
+    async addUsersRolesService(ctx, next) {
+        logger.debug('添加用户和角色关系');
+        let userRoleLink = ctx.request.body;
+        let addStatus = await addUsersRoles([userRoleLink.userId, userRoleLink.roleId]);
+        ctx.dataServices = (addStatus && addStatus.affectedRows >= 1);
+        ctx.retCode = addStatus ? retCodeEnum.ADD_USER_ROLE_LINK_SUCCESS : retCodeEnum.ADD_USER_ROLE_LINK_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'addUsersRoles';
+        logger.debug('[addUsersRolesService]', addStatus);
+        await next();
+    },
+
+    async delUsersRoleService(ctx, next) {
+        logger.debug('删除用户和角色关系');
+        let userId = ctx.params.userId;
+        let delStatus = await delUsersRole([userId]);
+        ctx.dataServices = (delStatus && delStatus.affectedRows >= 1);
+        ctx.retCode = delStatus ? retCodeEnum.DEL_USER_ROLE_LINK_SUCCESS : retCodeEnum.DEL_USER_ROLE_LINK_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'delUsersRole';
+        logger.debug('[delUsersRoleService]', delStatus);
         await next();
     }
 };
