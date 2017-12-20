@@ -1,100 +1,85 @@
-const router = require('koa-router')(),
-    {
-        listUsersService, listRolesService, listPermissionsService,
-        addUsersService, addRolesService, addPermissionService,
-        updateUsersService, updateRolesService, updatePermissionService,
-        delUserByUserId, delRoleByRoleId, delPermissionByPerId
-    } = require('../middlewares/users.middleware'),
-    {
-        checkParams4Users, checkParams4Roles, checkParam4Permission,
-        checkParam4DelUser, checkParam4DelRole, checkParam4DelPermission
-    } = require('../middlewares/checkParam.middleware'),
-    respMiddleware = require('../middlewares/res.middleware');
+const router = require('koa-router')();
+const {
+    listUsersService,
+    addUsersService,
+    updateUsersService,
+    delUserByUserId, getUserByLoginName,
+    userCountsService, getUserRolesService,
+    getRolesByUsersIdServices, addUsersRolesService, delUsersRoleService
+} = require('../middlewares/users.middleware');
+const {
+    checkParams4Users,
+    checkParam4DelUser,
+    checkParam4AddUserRoleLink,
+} = require('../middlewares/checkParam.middleware');
+const respMiddleware = require('../middlewares/res.middleware');
 
-//router.prefix('/authenticate');
 
+router.prefix('/users');
 
-router.get(
-    '/users',
+router.get('/',
     listUsersService,
     respMiddleware
 );
-router.get(
-    '/roles',
-    listRolesService,
-    respMiddleware
-);
-router.get(
-    '/permissions',
-    listPermissionsService,
-    respMiddleware
-);
 
-router.post(
-    '/users',
+router.post('/',
     checkParams4Users,
     addUsersService,
     respMiddleware
 );
 
-router.post(
-    '/roles',
-    checkParams4Roles,
-    addRolesService,
-    respMiddleware
-);
-
-router.post(
-    '/permissions',
-    checkParam4Permission,
-    addPermissionService,
-    respMiddleware
-);
-
 router.put(
-    '/users/:userId',
+    '/:userId',
     checkParam4DelUser,
     checkParams4Users,
     updateUsersService,
     respMiddleware
 );
 
-router.put(
-    '/roles/:roleId',
-    checkParam4DelRole,
-    checkParams4Roles,
-    updateRolesService,
-    respMiddleware
-);
-
-router.put(
-    '/permissions/:perId',
-    checkParam4DelPermission,
-    checkParam4Permission,
-    updatePermissionService,
-    respMiddleware
-);
-
 router.delete(
-    '/users/:userId',
+    '/:userId',
     checkParam4DelUser,
     delUserByUserId,
     respMiddleware
 );
 
-router.delete(
-    '/roles/:roleId',
-    checkParam4DelRole,
-    delRoleByRoleId,
+router.get(
+    '/roles/all-link',
+    getUserRolesService,
     respMiddleware
 );
 
-router.delete(
-    '/permissions/:perId',
-    checkParam4DelPermission,
-    delPermissionByPerId,
+router.post(
+    '/roles/link',
+    checkParam4AddUserRoleLink,
+    addUsersRolesService,
     respMiddleware
 );
 
+router.get(
+    '/counts',
+    userCountsService,
+    respMiddleware
+);
+
+router.get(
+    '/:userLoginName/user-login-name',
+    getUserByLoginName,
+    respMiddleware
+);
+
+
+router.get(
+    '/:userId/roles',
+    getRolesByUsersIdServices,
+    respMiddleware
+);
+
+
+router.delete(
+    '/:userId/roles',
+    delUsersRoleService,
+    respMiddleware
+);
 
 module.exports = router;

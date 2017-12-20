@@ -1,6 +1,7 @@
 const mySQL = require('mysql');
 const NDBC = require('../sources/NDBC.properties');
 const pool = mySQL.createPool(NDBC());
+const logger = require('../utils/logsTools').getLogger('base.dao.js');
 /**
  * Promise封装mysql模块
  */
@@ -12,7 +13,7 @@ module.exports = {
                 if (err) {
                     reject(err)
                 } else {
-                    connection.query(sql, values, (err, rows) => {
+                    let query = connection.query(sql, values, (err, rows) => {
                         if (err) {
                             reject(err)
                         } else {
@@ -20,7 +21,8 @@ module.exports = {
                         }
                         // 释放链接
                         connection.release()
-                    })
+                    });
+                    logger.debug('[执行的SQL]', query.sql);
                 }
             })
         })

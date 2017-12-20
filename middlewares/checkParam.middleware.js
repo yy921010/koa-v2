@@ -56,6 +56,26 @@ module.exports = {
         await next();
     },
 
+    async checkParam4AddUserRoleLink(ctx, next) {
+        let addUserRoleLink = ctx.request.body;
+        logger.info('PermissionParams', addUserRoleLink);
+        let isNotCompleteParams = checkParamsComplete(addUserRoleLink, [`userId`, `roleId`]);
+        if (isNotCompleteParams) {
+            ctx.throw(400, `${isNotCompleteParams} require`)
+        }
+        await next();
+    },
+
+    async checkParam4AddRolePermissionLink(ctx, next) {
+        let addUserRoleLink = ctx.request.body;
+        logger.info('PermissionParams', addUserRoleLink);
+        let isNotCompleteParams = checkParamsComplete(addUserRoleLink, [`perIds`, `roleId`]);
+        if (isNotCompleteParams) {
+            ctx.throw(400, `${isNotCompleteParams} require`)
+        }
+        await next();
+    },
+
     async checkParam4DelUser(ctx, next) {
         let userId = ctx.params.userId;
         logger.info('PermissionParams', userId);

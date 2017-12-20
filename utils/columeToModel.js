@@ -1,5 +1,6 @@
 const _ = require('underscore');
-
+const logger = require('./logsTools').getLogger('columeToModel.js');
+const moment = require('moment');
 /**
  * 首字母大写
  * @param str
@@ -27,6 +28,9 @@ module.exports = {
         if (_.isArray(mysqlValues)) {
             _.each(mysqlValues, (mysqlItems) => {
                 _.each(mysqlItems, (item, key) => {
+                    if (key === 'gmt_create' || key === 'gmt_modified') {
+                        item = moment(item).format('YYYY-MM-DD | hh:mm:ss')
+                    }
                     mysqlItems[converseKey(key)] = item;
                     if (converseKey(key) !== key) {
                         delete mysqlItems[key];

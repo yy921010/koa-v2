@@ -9,13 +9,13 @@ log4js.configure({
             layout: {
                 type: 'pattern',
                 // 日志格式
-                pattern: '[%d{yyyy-MM-dd hh:mm:ss.SSS}] [%[%5.5p%]] %c - %m%n'
+                pattern: '[%d{yyyy-MM-dd hh:mm:ss.SSS}] [%[%5.5p%]] [%c] - %m%n'
             }
         },
         everything: {
             type: 'dateFile',
             filename: 'logs/app-access.log',
-            pattern: '.yyyy-MM-dd-hh',
+            pattern: '.yyyy-MM-dd_hh',
             compress: true,
             layout: {
                 type: 'pattern',

@@ -10,6 +10,11 @@ module.exports = async (ctx, next) => {
             ctx.body = new respModel(ctx.dataMethod, ctx.dataServices, ctx.retCode);
             ctx.response.type = 'json';
             break;
+        case 'COUNTS':
+            let {countId} = ctx.dataServices[0];
+            ctx.body = new respModel(ctx.dataMethod, countId, ctx.retCode);
+            ctx.response.type = 'json';
+            break;
         default:
             ctx.response.type = 'text';
             ctx.body = 'no datas!';

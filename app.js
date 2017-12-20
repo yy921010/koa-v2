@@ -8,6 +8,8 @@ const logger = require('koa-logger');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
+const roles = require('./routes/roles');
+const permissions = require('./routes/permissions');
 const logger4js = require('./utils/logsTools').getLogger('app.js');
 
 // error handler
@@ -35,6 +37,8 @@ app.use(async (ctx, next) => {
 // routes
 app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
+app.use(roles.routes(), roles.allowedMethods());
+app.use(permissions.routes(), permissions.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {
