@@ -18,11 +18,15 @@ const {
     getUserRole,
     getRolesByUsersId,
     addUsersRoles,
-    delUsersRole
+    delUsersRole,
+    getRolePermission,
+    addRolesRolesPermission,
+    delRolePerLink
 } = require('../db/users.dao');
 const logger = require('../utils/logsTools').getLogger('users.middlewares.js');
 const {converseToModel} = require('../utils/columeToModel');
 const retCodeEnum = require('../models/retCode.model');
+const moment = require('moment');
 
 /**
  *用户的服务层
@@ -331,6 +335,51 @@ module.exports = {
         ctx.dataType = 'COMMIT_STATUS';
         ctx.dataMethod = 'delUsersRole';
         logger.debug('[delUsersRoleService]', delStatus);
+        await next();
+    },
+
+    async getRolePermissionService(ctx, next) {
+        logger.debug('通过角色ID当前的用户的角色');
+        let roleId = ctx.params.roleId;
+        let rolePermissionDAO = await getRolePermission([roleId]);
+        ctx.dataServices = converseToModel(rolePermissionDAO);
+        logger.debug('[getRolePermissionService]', ctx.dataServices);
+        ctx.dataType = 'COMBINATION';
+        ctx.dataMethod = 'getRolePermission';
+        await next();
+    },
+
+    async addRolesRolesPermissionServices(ctx, next) {
+        logger.debug('添加角色和权限关系');
+        let rolePermissionLink = ctx.request.body;
+        let {perIds, roleId} = rolePermissionLink;
+        let simpleParam = [];
+        if (typeof perIds === 'string') {
+            simpleParam = [roleId, perIds, moment().format('YYYY-MM-DD, hh:mm:ss'), moment().format('YYYY-MM-DD, hh:mm:ss')];
+        } else {
+            for (let perId of perIds) {
+                simpleParam.push([roleId, perId, moment().format('YYYY-MM-DD, hh:mm:ss'), moment().format('YYYY-MM-DD, hh:mm:ss')]);
+            }
+        }
+        logger.debug('[simpleParam]', simpleParam);
+        let addStatus = await addRolesRolesPermission([simpleParam]);
+        ctx.dataServices = (addStatus && addStatus.affectedRows >= 1);
+        ctx.retCode = addStatus ? retCodeEnum.ADD_ROLE_PER_SUCCESS : retCodeEnum.ADD_ROLE_PER_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'addRolesRolesPermission';
+        logger.debug('[addRolesRolesPermissionServices]', addStatus);
+        await next();
+    },
+
+    async delRolePerLinkService(ctx, next) {
+        logger.debug('删除角色和权限关系');
+        let roleId = ctx.params.roleId;
+        let delStatus = await delRolePerLink([roleId]);
+        ctx.dataServices = (delStatus && delStatus.affectedRows >= 1);
+        ctx.retCode = delStatus ? retCodeEnum.DEL_ROLE_PER_SUCCESS : retCodeEnum.DEL_ROLE_PER_FAIL;
+        ctx.dataType = 'COMMIT_STATUS';
+        ctx.dataMethod = 'delRolePerLink';
+        logger.debug('[delRolePerLinkService]', delStatus);
         await next();
     }
 };

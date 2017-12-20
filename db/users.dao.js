@@ -19,7 +19,9 @@ const {
     getUserByUserNameSQL,
     getRolesByUsersIdSQL,
     addUsersRolesSQL,
-    delUserRoleLinkSQL
+    delUserRoleLinkSQL,
+    addRolesPermissionSQL,
+    delRolePerLinkSQL
 } = require('../sources/users.sql');
 const {baseDAO} = require('./base.dao');
 
@@ -90,8 +92,8 @@ let getUserRole = async () => {
     return await baseDAO(getUserRoleSQL);
 };
 
-let getRolePermission = async () => {
-    return await baseDAO(getRolePermissionSQL);
+let getRolePermission = async (roleId) => {
+    return await baseDAO(getRolePermissionSQL, roleId);
 };
 
 let getUserByLoginName = async (userLoginName) => {
@@ -110,7 +112,16 @@ let delUsersRole = async (userId) => {
     return await baseDAO(delUserRoleLinkSQL, userId)
 };
 
+let addRolesRolesPermission = async (roleAndPermissionArr) => {
+    return await baseDAO(addRolesPermissionSQL, roleAndPermissionArr)
+};
+
+let delRolePerLink = async (roleId) => {
+    return await baseDAO(delRolePerLinkSQL, roleId)
+};
+
 module.exports = {
+    delRolePerLink,
     userCounts,
     roleCounts,
     permissionCounts,
@@ -131,5 +142,6 @@ module.exports = {
     getUserByLoginName,
     getRolesByUsersId,
     addUsersRoles,
-    delUsersRole
+    delUsersRole,
+    addRolesRolesPermission
 };

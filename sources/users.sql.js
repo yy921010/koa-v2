@@ -114,13 +114,14 @@ AND users_roles.id = users_roles_link.roles_id
 `;
 
 const getRolePermissionSQL = `
-SELECT r.roles_name,p.permission_name 
+SELECT r.roles_name,p.permission_name,p.id  
 FROM users_roles 
 AS r ,users_permission 
 AS p ,roles_permission_link 
 AS rp 
 WHERE r.id = rp.roles_id 
-AND p.id = rp.permission_id
+AND p.id = rp.permission_id 
+AND r.id=?
 `;
 
 const getRolesByUsersIdSQL =
@@ -146,6 +147,20 @@ users_roles_link
 WHERE user_id=?
 `;
 
+const addRolesPermissionSQL = `
+INSERT 
+ignore 
+INTO 
+roles_permission_link (roles_id,permission_id,gmt_create,gmt_modified) 
+VAlUES ?
+`;
+
+const delRolePerLinkSQL = `
+DELETE 
+FROM 
+roles_permission_link 
+WHERE roles_id=?
+`;
 module.exports = {
     countsUserSQL,
     listUsersSQL,
@@ -169,5 +184,7 @@ module.exports = {
     getRolePermissionSQL,
     getRolesByUsersIdSQL,
     addUsersRolesSQL,
-    delUserRoleLinkSQL
+    delUserRoleLinkSQL,
+    addRolesPermissionSQL,
+    delRolePerLinkSQL
 };
