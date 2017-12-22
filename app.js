@@ -4,13 +4,17 @@ const views = require('koa-views');
 const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
-const logger = require('koa-logger');
+
+const koaServer = require('koa-static');
+const staticResources = koaServer(__dirname + '/public');
+const authentication = require('./middlewares/authentication.middileware');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
 const roles = require('./routes/roles');
+
 const permissions = require('./routes/permissions');
-const logger4js = require('./utils/logsTools').getLogger('app.js');
+const logger = require('./utils/logsTools').getLogger('app.js');
 
 // error handler
 onerror(app);
@@ -20,18 +24,19 @@ app.use(bodyparser({
     enableTypes: ['json', 'form', 'text']
 }));
 app.use(json());
-app.use(logger());
-app.use(require('koa-static')(__dirname + '/public'));
+app.use(staticResources);
 app.use(views(__dirname + '/views', {
     extension: 'pug'
 }));
+
+app.use(authentication);
 
 // logger
 app.use(async (ctx, next) => {
     const start = new Date();
     await next();
     const ms = new Date() - start;
-    logger4js.info(`${ctx.method} ${ctx.url} - ${ms}ms`);
+    logger.info(`${ctx.method} ${ctx.url} - ${ms}ms`);
 });
 
 // routes
@@ -42,7 +47,7 @@ app.use(permissions.routes(), permissions.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {
-    logger4js.error('server error', err, ctx);
+    logger.error('server error', err, ctx);
 });
 
 module.exports = app;
