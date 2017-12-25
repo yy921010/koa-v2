@@ -1,7 +1,8 @@
 const router = require('koa-router')();
-
-router.prefix('/auth');
-
+const {createToken} = require('../middlewares/token.middleware');
+router.prefix('/auth')
+    .post('/login',
+        createToken);
 
 
 module.exports = router;

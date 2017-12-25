@@ -1,12 +1,16 @@
 const jwt = require('jsonwebtoken');
-const jwtKoa = require('koa-jwt');
+const koaJWT = require('koa-jwt');
 const util = require('util');
 const verify = util.promisify(jwt.verify);
 const fs = require('fs');
 const publicKey = fs.readFileSync('sources/public.pub');
 
-module.exports = jwtKoa({
+module.exports = koaJWT({
     secret: publicKey
 }).unless({
-    path: [/^\/users/, '/']
+    path: [
+        /^\/auth/,
+        '/',
+        '/favicon.ico'
+    ]
 });

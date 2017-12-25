@@ -12,6 +12,7 @@ const authentication = require('./middlewares/authentication.middileware');
 const index = require('./routes/index');
 const users = require('./routes/users');
 const roles = require('./routes/roles');
+const auth = require('./routes/authentication');
 
 const permissions = require('./routes/permissions');
 const logger = require('./utils/logsTools').getLogger('app.js');
@@ -44,6 +45,7 @@ app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
 app.use(roles.routes(), roles.allowedMethods());
 app.use(permissions.routes(), permissions.allowedMethods());
+app.use(auth.routes(), auth.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
