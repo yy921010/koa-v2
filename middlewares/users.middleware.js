@@ -27,6 +27,7 @@ const logger = require('../utils/logsTools').getLogger('users.middlewares.js');
 const {converseToModel} = require('../utils/columeToModel');
 const retCodeEnum = require('../models/retCode.model');
 const moment = require('moment');
+const bcrypt = require('bcryptjs');
 
 /**
  *用户的服务层
@@ -126,7 +127,10 @@ module.exports = {
     async addUsersService(ctx, next) {
         logger.debug('添加单个用户');
         let userInfo = ctx.request.body;
-        let addStatus = await addUser([userInfo.userLoginName, userInfo.userPassword, userInfo.userName]);
+        let salt = bcrypt.genSaltSync(10);
+        //加密
+        let userPasswordHash = bcrypt.hashSync(userInfo.userPassword, salt);
+        let addStatus = await addUser([userInfo.userLoginName, userPasswordHash, userInfo.userName]);
         let isAddStatus = (addStatus && addStatus.affectedRows >= 1);
         ctx.dataServices = isAddStatus;
         ctx.retCode = isAddStatus ? retCodeEnum.ADD_USER_SUCCESS : retCodeEnum.ADD_USER_FAIL;

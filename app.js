@@ -30,6 +30,7 @@ app.use(views(__dirname + '/views', {
     extension: 'pug'
 }));
 
+
 app.use(authentication);
 
 // logger
@@ -45,7 +46,7 @@ app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
 app.use(roles.routes(), roles.allowedMethods());
 app.use(permissions.routes(), permissions.allowedMethods());
-app.use(auth.routes(), auth.allowedMethods())
+app.use(auth.routes(), auth.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {

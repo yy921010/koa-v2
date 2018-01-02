@@ -1,4 +1,9 @@
 const router = require('koa-router')();
+
+const jwt = require('jsonwebtoken')
+const util = require('util')
+const verify = util.promisify(jwt.verify)
+
 const {
     listUsersService,
     addUsersService,
@@ -19,7 +24,7 @@ router.prefix('/users');
 
 router.get('/',
     listUsersService,
-    respMiddleware
+    respMiddleware,
 );
 
 router.post('/',
