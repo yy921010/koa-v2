@@ -1,9 +1,5 @@
 const router = require('koa-router')();
 
-const jwt = require('jsonwebtoken')
-const util = require('util')
-const verify = util.promisify(jwt.verify)
-
 const {
     listUsersService,
     addUsersService,

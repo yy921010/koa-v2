@@ -7,14 +7,14 @@ const bodyparser = require('koa-bodyparser');
 
 const koaServer = require('koa-static');
 const staticResources = koaServer(__dirname + '/public');
-const authentication = require('./middlewares/authentication.middileware');
+const {authenticated, normalAuthenticated} = require('./middlewares/authentication.middileware');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
 const roles = require('./routes/roles');
 const auth = require('./routes/authentication');
-
 const permissions = require('./routes/permissions');
+
 const logger = require('./utils/logsTools').getLogger('app.js');
 
 // error handler
@@ -31,7 +31,9 @@ app.use(views(__dirname + '/views', {
 }));
 
 
-app.use(authentication);
+app.use(authenticated());
+
+app.use(normalAuthenticated);
 
 // logger
 app.use(async (ctx, next) => {

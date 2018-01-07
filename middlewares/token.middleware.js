@@ -12,6 +12,7 @@ module.exports = {
         let users = await getUserByLoginName([body.userLoginName]);
         let user = converseToModel(users)[0];
         let roles = await getRolesByUsersId([user.id]);
+        let role = converseToModel(roles)[0];
         if (_.isEmpty(user)) {
             ctx.status = 400;
             ctx.body = {
@@ -24,7 +25,7 @@ module.exports = {
             ctx.status = 200;
             let userToken = {
                 name: user.userLoginName,
-                id: user.id,
+                id: role.id,
                 //签发时间
                 iat: new Date().getTime()
             };
